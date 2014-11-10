@@ -3,7 +3,10 @@ package uk.co.platitech.models;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import uk.co.platitech.AppsEntity;
+import uk.co.platitech.BankAccountEntity;
 import uk.co.platitech.UsersEntity;
+
+import java.util.List;
 
 /**
  * Created by Samuel on 11/8/2014.
@@ -60,6 +63,17 @@ public class DataRepository {
             query.setParameter("uEmail", email);
             query.setParameter("uPassword", password);
             return (UsersEntity) query.uniqueResult();
+        } catch (Exception ex) {
+        }
+        return null;
+    }
+
+    public List<BankAccountEntity> fetchAllBankAccount(UsersEntity users) {
+        try {
+            Query query = session.createQuery("from BankAccountEntity ac where ac.users = :acUser  ");
+            query.setParameter("acUser", users);
+
+            return (List<BankAccountEntity>) query.list();
         } catch (Exception ex) {
         }
         return null;

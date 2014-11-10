@@ -26,6 +26,7 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(uk.co.platitech.services.RegisterApplication.class);
         resources.add(uk.co.platitech.services.Users.class);
+        resources.add(uk.co.platitech.services.Accounts.class);
 
     }
 
