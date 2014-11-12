@@ -4,6 +4,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import uk.co.platitech.AppsEntity;
 import uk.co.platitech.BankAccountEntity;
+import uk.co.platitech.CurrenciesEntity;
 import uk.co.platitech.UsersEntity;
 
 import java.util.List;
@@ -45,6 +46,17 @@ public class DataRepository {
             ex.printStackTrace();
         }
        return null;
+    }
+
+    public CurrenciesEntity getCurrencyByCode(String code) {
+        try {
+            Query query = session.createQuery("from CurrenciesEntity c where c.code = :cCode ");
+            query.setParameter("cCode", code);
+            return (CurrenciesEntity) query.uniqueResult();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     public UsersEntity getUserByUserId(String userId) {

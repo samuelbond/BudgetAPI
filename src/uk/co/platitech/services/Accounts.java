@@ -1,18 +1,25 @@
 package uk.co.platitech.services;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import sun.misc.FloatingDecimal;
+import uk.co.platitech.AccountBalanceEntity;
+import uk.co.platitech.BankAccountEntity;
+import uk.co.platitech.CurrenciesEntity;
+import uk.co.platitech.UsersEntity;
 import uk.co.platitech.components.accountmanager.v1.AccountManagerImp;
 import uk.co.platitech.components.appauthentication.v1.AppAuthenticationImp;
+import uk.co.platitech.helpers.BankAccountAdaptor;
+import uk.co.platitech.helpers.DataObject;
+import uk.co.platitech.helpers.HibernateProxyTypeAdapter;
 
 import javax.ejb.Stateless;
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import java.util.List;
+
+import static uk.co.platitech.helpers.HibernateProxyTypeAdapter.FACTORY;
 
 /**
  * Created by samuel on 10/11/14.
@@ -21,26 +28,81 @@ import java.util.List;
 @Path("co.uk.platitech.budget.accounts")
 public class Accounts {
 
+
     @GET
     @Path("{userId}")
     @Produces({"application/json"})
-    public JsonObject getAccounts(@PathParam("userId") String userId)
+    public String getAccounts(@PathParam("userId") String userId)
     {
-        JsonBuilderFactory factory = Json.createBuilderFactory(null);
-        JsonObject value = null;
-        Gson js = new Gson();
+        JsonObject value = new JsonObject();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.registerTypeAdapter(BankAccountEntity.class, new BankAccountAdaptor()).create();
+        String output = null;
+
         AccountManagerImp acct = new AccountManagerImp();
+        List<BankAccountEntity> accounts = acct.getUserBankAccounts(userId);
 
         if(userId.length() != 8)
         {
-            value = factory.createObjectBuilder().add("status", "error").add("error", "could not validate user id provided").build();
+            value.addProperty("status", "error");
+            value.addProperty("error", "Could not validate user");
+            output = value.toString();
         }
         else
         {
-            List accounts = acct.getUserBankAccounts(userId);
-            value = factory.createObjectBuilder().add("status", "success").add("accounts", ((accounts == null) ? "" : js.toJson(accounts))).build();
+            if(accounts == null) {
+                value.addProperty("status", "success");
+                value.addProperty("accounts", "no account");
+                output = value.toString();
+            }
+            else
+            {
+
+                value.addProperty("status", "success");
+                value.add("list", gson.toJsonTree(accounts));
+                output = value.toString();
+            }
+
         }
 
-        return value;
+        return output;
     }
+
+    @POST
+    @Path("/create")
+    @Produces({"application/json"})
+    public String createNewAccount(javax.json.JsonObject json)
+    {
+        // Accounts Component
+        AccountManagerImp ami = new AccountManagerImp();
+
+        JsonObject value = new JsonObject();
+
+        BankAccountEntity bae = new BankAccountEntity();
+        bae.setAccountName(json.getString("account_name"));
+        bae.setAccountNumber(Integer.parseInt(json.getString("account_number")));
+        bae.setUsers(new UsersEntity(json.getString("user_id")));
+        AccountBalanceEntity abe = new AccountBalanceEntity();
+        abe.setBalance(Long.parseLong(json.getString("start_balance")));
+        abe.setLastBalance(Long.parseLong(json.getString("start_balance")));
+        CurrenciesEntity ce = new CurrenciesEntity();
+        ce.setCode(json.getString("currency_code"));
+        ce.setCountry(json.getString("currency_country"));
+//
+//
+//        if(ami.createNewAccount(bae,abe,ce))
+//        {
+//            value.addProperty("status", "success");
+//            value.addProperty("message", "account created");
+//        }
+//        else {
+//            value.addProperty("status", "error");
+//            value.addProperty("error", "could not create new account");
+//        }
+//
+
+        return ami.createNewAccount(bae,abe,ce);
+    }
+
+
 }
