@@ -13,5 +13,5 @@ public interface AccountManagerInterface {
 
     public List<BankAccountEntity> getUserBankAccounts(String userId);
 
-    public String createNewAccount(BankAccountEntity bae, AccountBalanceEntity abe, CurrenciesEntity ce);
+    public Boolean createNewAccount(BankAccountEntity bae, AccountBalanceEntity abe, CurrenciesEntity ce);
 }

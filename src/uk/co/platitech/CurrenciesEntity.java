@@ -25,64 +25,64 @@ import javax.persistence.UniqueConstraint;
 public class CurrenciesEntity implements java.io.Serializable {
 
 
-     private Integer id;
-     private String code;
-     private String country;
-     private Set<BankAccountEntity> bankAccountEntities = new HashSet<BankAccountEntity>(0);
+    private Integer id;
+    private String code;
+    private String country;
+    private Set<BankAccountEntity> bankAccounts = new HashSet<BankAccountEntity>(0);
 
     public CurrenciesEntity() {
     }
 
-	
+
     public CurrenciesEntity(String code, String country) {
         this.code = code;
         this.country = country;
     }
-    public CurrenciesEntity(String code, String country, Set<BankAccountEntity> bankAccountEntities) {
-       this.code = code;
-       this.country = country;
-       this.bankAccountEntities = bankAccountEntities;
+    public CurrenciesEntity(String code, String country, Set<BankAccountEntity> bankAccounts) {
+        this.code = code;
+        this.country = country;
+        this.bankAccounts = bankAccounts;
     }
-   
-     @Id @GeneratedValue(strategy=IDENTITY)
 
-    
+    @Id @GeneratedValue(strategy=IDENTITY)
+
+
     @Column(name="id", unique=true, nullable=false)
     public Integer getId() {
         return this.id;
     }
-    
+
     public void setId(Integer id) {
         this.id = id;
     }
 
-    
+
     @Column(name="code", unique=true, nullable=false, length=3)
     public String getCode() {
         return this.code;
     }
-    
+
     public void setCode(String code) {
         this.code = code;
     }
 
-    
+
     @Column(name="country", nullable=false, length=45)
     public String getCountry() {
         return this.country;
     }
-    
+
     public void setCountry(String country) {
         this.country = country;
     }
 
-@OneToMany(fetch=FetchType.LAZY, mappedBy= "currenciesEntity")
-    public Set<BankAccountEntity> getBankAccountEntities() {
-        return this.bankAccountEntities;
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="currencies")
+    public Set<BankAccountEntity> getBankAccounts() {
+        return this.bankAccounts;
     }
-    
-    public void setBankAccountEntities(Set<BankAccountEntity> bankAccountEntities) {
-        this.bankAccountEntities = bankAccountEntities;
+
+    public void setBankAccounts(Set<BankAccountEntity> bankAccounts) {
+        this.bankAccounts = bankAccounts;
     }
 
 

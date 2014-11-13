@@ -2,10 +2,7 @@ package uk.co.platitech.models;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import uk.co.platitech.AppsEntity;
-import uk.co.platitech.BankAccountEntity;
-import uk.co.platitech.CurrenciesEntity;
-import uk.co.platitech.UsersEntity;
+import uk.co.platitech.*;
 
 import java.util.List;
 
@@ -29,6 +26,18 @@ public class DataRepository {
         try {
             session.beginTransaction();
             session.persist(obj);
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            return  false;
+        }
+
+        return true;
+    }
+
+    public boolean delete(Object obj) {
+        try {
+            session.beginTransaction();
+            session.delete(obj);
             session.getTransaction().commit();
         } catch (Exception ex) {
             return  false;
@@ -64,6 +73,26 @@ public class DataRepository {
             Query query = session.createQuery("from UsersEntity u where u.userId = :uId ");
             query.setParameter("uId", userId);
             return (UsersEntity) query.uniqueResult();
+        } catch (Exception ex) {
+        }
+        return null;
+    }
+
+    public AccountBalanceEntity getAccountBalanceByAccountId(BankAccountEntity accountId) {
+        try {
+            Query query = session.createQuery("from AccountBalanceEntity ac where ac.bankAccount = :acBank");
+            query.setParameter("acBank", accountId);
+            return (AccountBalanceEntity) query.uniqueResult();
+        } catch (Exception ex) {
+        }
+        return null;
+    }
+
+    public BankAccountEntity getBankAccountByAccountId(Integer accountId) {
+        try {
+            Query query = session.createQuery("from BankAccountEntity ac where ac.id = :acBank");
+            query.setParameter("acBank", accountId);
+            return (BankAccountEntity) query.uniqueResult();
         } catch (Exception ex) {
         }
         return null;
