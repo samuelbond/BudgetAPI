@@ -8,6 +8,7 @@ import sun.misc.FloatingDecimal;
 import uk.co.platitech.*;
 import uk.co.platitech.components.accountmanager.v1.AccountManagerImp;
 import uk.co.platitech.components.appauthentication.v1.AppAuthenticationImp;
+import uk.co.platitech.helpers.AccountTransactionAdaptor;
 import uk.co.platitech.helpers.BankAccountAdaptor;
 import uk.co.platitech.helpers.DataObject;
 import uk.co.platitech.helpers.HibernateProxyTypeAdapter;
@@ -58,6 +59,52 @@ public class Accounts {
 
                 value.addProperty("status", "success");
                 value.add("list", gson.toJsonTree(accounts));
+                output = value.toString();
+            }
+
+        }
+
+        return output;
+    }
+
+    @POST
+    @Path("/transaction")
+    @Produces({"application/json"})
+    public String getTransaction(javax.json.JsonObject json)
+    {
+        JsonObject value = new JsonObject();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.registerTypeAdapter(AccountTransactionsEntity.class, new AccountTransactionAdaptor()).create();
+        String output = null;
+        String userId = json.getString("account_id");
+        AccountManagerImp acct = new AccountManagerImp();
+        Boolean isAcctBelongToUser = acct.verifyAccountBelongsToUser(Integer.parseInt(json.getString("account_id")), userId);
+
+        if(userId.length() != 8 || !isAcctBelongToUser)
+        {
+            value.addProperty("status", "error");
+            value.addProperty("error", "Could not validate user");
+            output = value.toString();
+        }
+        else
+        {
+            List<AccountTransactionsEntity> transactions = acct.getAccountTransactions(Integer.parseInt(json.getString("account_id")));
+            AccountBalanceEntity balanceEntity = acct.getUserAccountBalance(Integer.parseInt(json.getString("account_id")));
+
+            if(transactions == null) {
+                value.addProperty("status", "success");
+                value.addProperty("balance", balanceEntity.getBalance());
+                value.addProperty("last_balance", balanceEntity.getLastBalance());
+
+                output = value.toString();
+            }
+            else
+            {
+
+                value.addProperty("status", "success");
+                value.addProperty("balance", balanceEntity.getBalance());
+                value.addProperty("last_balance", balanceEntity.getLastBalance());
+                value.add("list", gson.toJsonTree(transactions));
                 output = value.toString();
             }
 
