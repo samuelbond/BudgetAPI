@@ -98,6 +98,17 @@ public class DataRepository {
         return null;
     }
 
+    public BankAccountEntity getBankAccountByAccountIdAndUserId(Integer accountId, UsersEntity usersEntity) {
+        try {
+            Query query = session.createQuery("from BankAccountEntity ac where ac.id = :acBank and ac.users = :acUsers");
+            query.setParameter("acBank", accountId);
+            query.setParameter("acUsers", usersEntity);
+            return (BankAccountEntity) query.uniqueResult();
+        } catch (Exception ex) {
+        }
+        return null;
+    }
+
     public UsersEntity getUserByEmailAndPassword(String email, String password) {
         try {
             Query query = session.createQuery("from UsersEntity u where u.email = :uEmail and u.password = :uPassword ");
@@ -115,6 +126,18 @@ public class DataRepository {
             query.setParameter("acUser", users);
 
             return (List<BankAccountEntity>) query.list();
+        } catch (Exception ex) {
+        }
+        return null;
+    }
+
+
+    public List<AccountTransactionsEntity> fetchAllAccountTransactions(BankAccountEntity accountEntity) {
+        try {
+            Query query = session.createQuery("from AccountTransactionsEntity ac where ac.bankAccountEntity = :acAcc  ");
+            query.setParameter("acAcc", accountEntity);
+
+            return (List<AccountTransactionsEntity>) query.list();
         } catch (Exception ex) {
         }
         return null;

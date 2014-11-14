@@ -60,6 +60,34 @@ public class AccountManagerImp implements AccountManagerInterface {
         return false;
     }
 
+    public Boolean verifyAccountBelongsToUser(Integer accountId, String userId)
+    {
+        try
+        {
+            UsersEntity ue = new UsersEntity(userId);
+            BankAccountEntity bankAccountEntity = this.data.getBankAccountByAccountIdAndUserId(accountId, ue);
+
+            if(bankAccountEntity != null)
+            {
+                return true;
+            }
+
+        }catch (Exception ex)
+        {
+
+        }
+
+        return false;
+    }
+
+    public List<AccountTransactionsEntity> getAccountTransactions(Integer accountId)
+    {
+        BankAccountEntity bae = new BankAccountEntity();
+        bae.setId(accountId);
+
+        return this.data.fetchAllAccountTransactions(bae);
+    }
+
     public Boolean removeAccount(String accountId)
     {
         try
