@@ -34,6 +34,19 @@ public class DataRepository {
         return true;
     }
 
+    public boolean update(Object obj)
+    {
+        try {
+            session.beginTransaction();
+            session.merge(obj);
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            return  false;
+        }
+
+        return true;
+    }
+
     public boolean delete(Object obj) {
         try {
             session.beginTransaction();
@@ -138,6 +151,28 @@ public class DataRepository {
             query.setParameter("acAcc", accountEntity);
 
             return (List<AccountTransactionsEntity>) query.list();
+        } catch (Exception ex) {
+        }
+        return null;
+    }
+
+    public TransactionCategoryEntity getTransactionCategory(String categoryName)
+    {
+        try {
+            Query query = session.createQuery("from TransactionCategoryEntity tc where tc.categoryName = :tcName ");
+            query.setParameter("tcName", categoryName);
+            return (TransactionCategoryEntity) query.uniqueResult();
+        } catch (Exception ex) {
+        }
+        return null;
+    }
+
+
+    public List<TransactionCategoryEntity> fetchAllTransactionCategories() {
+        try {
+            Query query = session.createQuery("from TransactionCategoryEntity ");
+
+            return (List<TransactionCategoryEntity>) query.list();
         } catch (Exception ex) {
         }
         return null;

@@ -47,5 +47,6 @@
     <orderEntry type="library" name="mysql:mysql-connector-java:5.1.33" level="project" />
     <orderEntry type="library" name="javax.ws.rs:javax.ws.rs-api:2.0" level="project" />
     <orderEntry type="library" name="javax:javaee-api:7.0" level="project" />
+    <orderEntry type="library" name="com.google.code.gson:gson:2.3" level="project" />
   </component>
 </module>

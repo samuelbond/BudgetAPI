@@ -32,6 +32,11 @@ public class AccountManagerImp implements AccountManagerInterface {
         return this.data.getAccountBalanceByAccountId(bae);
     }
 
+    public TransactionCategoryEntity getCategory(String type)
+    {
+        return this.data.getTransactionCategory(type);
+    }
+
 
     public Boolean createNewAccount(BankAccountEntity bae, AccountBalanceEntity abe, CurrenciesEntity ce)
     {
@@ -117,7 +122,27 @@ public class AccountManagerImp implements AccountManagerInterface {
             rsg.setStringLength(5);
             id = id+rsg.generate();
             accountTransactionsEntity.setTransactionId(id);
+
+            AccountBalanceEntity ab = this.getUserAccountBalance(accountTransactionsEntity.getBankAccountEntity().getId());
+
+            if(ab == null)
+            {
+                return false;
+            }
+
+            ab.setLastBalance(ab.getBalance());
+            if(accountTransactionsEntity.getTransactionCategory().getCategoryName().equals("CREDIT"))
+            {
+                ab.setBalance(ab.getBalance() + Long.parseLong(accountTransactionsEntity.getTransactionAmount()));
+            }
+            else
+            {
+                ab.setBalance(ab.getBalance() - Long.parseLong(accountTransactionsEntity.getTransactionAmount()));
+            }
+
+            this.data.update(ab);
             this.data.insert(accountTransactionsEntity);
+
             return true;
         }catch (Exception ex)
         {

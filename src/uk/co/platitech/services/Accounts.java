@@ -76,7 +76,7 @@ public class Accounts {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.registerTypeAdapter(AccountTransactionsEntity.class, new AccountTransactionAdaptor()).create();
         String output = null;
-        String userId = json.getString("account_id");
+        String userId = json.getString("user_id");
         AccountManagerImp acct = new AccountManagerImp();
         Boolean isAcctBelongToUser = acct.verifyAccountBelongsToUser(Integer.parseInt(json.getString("account_id")), userId);
 
@@ -91,10 +91,11 @@ public class Accounts {
             List<AccountTransactionsEntity> transactions = acct.getAccountTransactions(Integer.parseInt(json.getString("account_id")));
             AccountBalanceEntity balanceEntity = acct.getUserAccountBalance(Integer.parseInt(json.getString("account_id")));
 
-            if(transactions == null) {
+            if(transactions == null || transactions.isEmpty()) {
                 value.addProperty("status", "success");
                 value.addProperty("balance", balanceEntity.getBalance());
                 value.addProperty("last_balance", balanceEntity.getLastBalance());
+                value.addProperty("currency", balanceEntity.getBankAccount().getCurrencies().getCode());
 
                 output = value.toString();
             }
@@ -104,6 +105,7 @@ public class Accounts {
                 value.addProperty("status", "success");
                 value.addProperty("balance", balanceEntity.getBalance());
                 value.addProperty("last_balance", balanceEntity.getLastBalance());
+                value.addProperty("currency", balanceEntity.getBankAccount().getCurrencies().getCode());
                 value.add("list", gson.toJsonTree(transactions));
                 output = value.toString();
             }
@@ -174,22 +176,60 @@ public class Accounts {
     }
 
     @POST
-    @Path("/addtransaction")
+    @Path("/transaction/add")
     @Produces({"application/json"})
     public String addTransaction(javax.json.JsonObject json)
     {
-        AccountTransactionsEntity ate = new AccountTransactionsEntity();
-        BankAccountEntity account = new BankAccountEntity();
-        account.setId(Integer.parseInt(json.getString("account_id")));
-        ate.setBankAccountEntity(account);
-        ate.setTransactionAmount(json.getString("trx_amount"));
-        TransactionCategoryEntity tce = new TransactionCategoryEntity();
-        tce.setId(Integer.parseInt(json.getString("trx_amount")));
-        ate.setTransactionCategory(tce);
-        ate.setTransactionName(json.getString("trx_name"));
-        ate.setTransactionDate(new Date().toString());
+        AccountManagerImp acct = new AccountManagerImp();
+        JsonObject value = new JsonObject();
+        String userId = json.getString("user_id");
+        String output = null;
 
-        return null;
+        if(userId.length() != 8 || !acct.verifyAccountBelongsToUser(Integer.parseInt(json.getString("account_id")), userId))
+        {
+            value.addProperty("status", "error");
+            value.addProperty("error", "Could not validate user");
+            output = value.toString();
+        }else
+        {
+
+            TransactionCategoryEntity tce = acct.getCategory(json.getString("type"));
+
+            if(tce == null)
+            {
+                value.addProperty("status", "error");
+                value.addProperty("error", "Internal error, could not process request");
+                output = value.toString();
+            }
+            else
+            {
+                AccountTransactionsEntity ate = new AccountTransactionsEntity();
+                BankAccountEntity account = new BankAccountEntity();
+                account.setId(Integer.parseInt(json.getString("account_id")));
+                ate.setBankAccountEntity(account);
+                ate.setTransactionAmount(json.getString("trx_amount"));
+                ate.setTransactionCategory(tce);
+                ate.setTransactionName(json.getString("trx_name"));
+                ate.setTransactionDate(json.getString("trx_date"));
+
+                if(acct.addNewTransaction(ate))
+                {
+                    value.addProperty("status", "success");
+                    value.addProperty("message", "Transaction added with id: "+ate.getTransactionId());
+                    output = value.toString();
+                }
+                else
+                {
+                    value.addProperty("status", "error");
+                    value.addProperty("error", "Internal error, failed to add transaction");
+                    output = value.toString();
+                }
+            }
+
+
+        }
+
+        return output;
     }
 
 

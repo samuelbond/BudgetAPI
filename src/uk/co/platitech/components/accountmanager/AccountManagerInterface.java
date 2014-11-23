@@ -1,8 +1,6 @@
 package uk.co.platitech.components.accountmanager;
 
-import uk.co.platitech.AccountBalanceEntity;
-import uk.co.platitech.BankAccountEntity;
-import uk.co.platitech.CurrenciesEntity;
+import uk.co.platitech.*;
 
 import java.util.List;
 
@@ -14,4 +12,14 @@ public interface AccountManagerInterface {
     public List<BankAccountEntity> getUserBankAccounts(String userId);
 
     public Boolean createNewAccount(BankAccountEntity bae, AccountBalanceEntity abe, CurrenciesEntity ce);
+
+    public AccountBalanceEntity getUserAccountBalance(Integer accountId);
+
+    public Boolean verifyAccountBelongsToUser(Integer accountId, String userId);
+
+    public List<AccountTransactionsEntity> getAccountTransactions(Integer accountId);
+
+    public Boolean addNewTransaction(AccountTransactionsEntity accountTransactionsEntity);
+
+    public TransactionCategoryEntity getCategory(String type);
 }
