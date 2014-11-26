@@ -145,10 +145,34 @@ public class DataRepository {
     }
 
 
+    public List<BudgetsEntity> fetchAllBudget(UsersEntity usersEntity)
+    {
+        try {
+            Query query = session.createQuery("from BudgetsEntity ac where ac.users = :acUser  ");
+            query.setParameter("acUser", usersEntity);
+
+            return (List<BudgetsEntity>) query.list();
+        } catch (Exception ex) {
+        }
+        return null;
+    }
+
+
     public List<AccountTransactionsEntity> fetchAllAccountTransactions(BankAccountEntity accountEntity) {
         try {
-            Query query = session.createQuery("from AccountTransactionsEntity ac where ac.bankAccountEntity = :acAcc  ");
+            Query query = session.createQuery("from AccountTransactionsEntity ac where ac.bankAccount = :acAcc  ");
             query.setParameter("acAcc", accountEntity);
+
+            return (List<AccountTransactionsEntity>) query.list();
+        } catch (Exception ex) {
+        }
+        return null;
+    }
+
+    public List<AccountTransactionsEntity> fetchAllBudgetTransactions(BudgetsEntity budgetsEntity) {
+        try {
+            Query query = session.createQuery("from AccountTransactionsEntity ac where ac.budgetEnty = :acAcc  ");
+            query.setParameter("acAcc", budgetsEntity);
 
             return (List<AccountTransactionsEntity>) query.list();
         } catch (Exception ex) {
