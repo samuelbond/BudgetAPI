@@ -113,6 +113,20 @@ public class AccountManagerImp implements AccountManagerInterface {
     }
 
 
+    public Boolean createNewBudget(BudgetsEntity budgetsEntity)
+    {
+        try
+        {
+            this.data.insert(budgetsEntity);
+        }catch (Exception ex)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+
     public Boolean addNewTransaction(AccountTransactionsEntity accountTransactionsEntity)
     {
         try
@@ -123,7 +137,7 @@ public class AccountManagerImp implements AccountManagerInterface {
             id = id+rsg.generate();
             accountTransactionsEntity.setTransactionId(id);
 
-            AccountBalanceEntity ab = this.getUserAccountBalance(accountTransactionsEntity.getBankAccountEntity().getId());
+            AccountBalanceEntity ab = this.getUserAccountBalance(accountTransactionsEntity.getBankAccount().getId());
 
             if(ab == null)
             {

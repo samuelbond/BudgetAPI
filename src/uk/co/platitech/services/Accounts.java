@@ -152,6 +152,39 @@ public class Accounts {
     }
 
     @POST
+    @Path("/create/budget")
+    @Produces({"application/json"})
+    public String createNewBudget(javax.json.JsonObject json)
+    {
+        // Accounts Component
+        AccountManagerImp ami = new AccountManagerImp();
+
+        JsonObject value = new JsonObject();
+        BudgetsEntity bet = new BudgetsEntity();
+        bet.setBudgetName(json.getString("budget_name"));
+        bet.setBudgetMaxAmount(Long.parseLong(json.getString("budget_amount")));
+        bet.setBudgetDescription(json.getString("budget_description"));
+        bet.setUsers(new UsersEntity(json.getString("user_id")));
+        BankAccountEntity ba = new BankAccountEntity();
+        ba.setId(Integer.parseInt(json.getString("account_id")));
+        bet.setBankAccount(ba);
+
+
+        if(ami.createNewBudget(bet))
+        {
+            value.addProperty("status", "success");
+            value.addProperty("message", "budget created");
+        }
+        else {
+            value.addProperty("status", "error");
+            value.addProperty("error", "could not create new budget");
+        }
+
+
+        return value.toString();
+    }
+
+    @POST
     @Path("/delete")
     @Produces({"application/json"})
     public String deleteBankAccount(javax.json.JsonObject json)
@@ -193,6 +226,7 @@ public class Accounts {
         }else
         {
 
+
             TransactionCategoryEntity tce = acct.getCategory(json.getString("type"));
 
             if(tce == null)
@@ -204,9 +238,15 @@ public class Accounts {
             else
             {
                 AccountTransactionsEntity ate = new AccountTransactionsEntity();
+                if(json.getString("transaction_type").equals("budget"))
+                {
+                    BudgetsEntity bet = new BudgetsEntity();
+                    bet.setBudgetId(Integer.parseInt(json.getString("budget_id")));
+                    ate.setBudgetEnty(bet);
+                }
                 BankAccountEntity account = new BankAccountEntity();
                 account.setId(Integer.parseInt(json.getString("account_id")));
-                ate.setBankAccountEntity(account);
+                ate.setBankAccount(account);
                 ate.setTransactionAmount(json.getString("trx_amount"));
                 ate.setTransactionCategory(tce);
                 ate.setTransactionName(json.getString("trx_name"));

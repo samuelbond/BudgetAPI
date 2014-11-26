@@ -1,5 +1,5 @@
 package uk.co.platitech;
-// Generated Nov 9, 2014 2:37:52 PM by Hibernate Tools 4.3.1
+// Generated 26-Nov-2014 12:12:14 by Hibernate Tools 3.6.0
 
 
 import javax.persistence.Column;
@@ -21,8 +21,9 @@ public class AccountTransactionsEntity implements java.io.Serializable {
 
 
      private String transactionId;
-     private BankAccountEntity bankAccountEntity;
      private TransactionCategoryEntity transactionCategory;
+     private BankAccountEntity bankAccount;
+     private BudgetsEntity budgetEnty;
      private String transactionAmount;
      private String transactionDate;
      private String transactionName;
@@ -34,10 +35,11 @@ public class AccountTransactionsEntity implements java.io.Serializable {
     public AccountTransactionsEntity(String transactionId) {
         this.transactionId = transactionId;
     }
-    public AccountTransactionsEntity(String transactionId, BankAccountEntity bankAccountEntity, TransactionCategoryEntity transactionCategoryEntity, String transactionAmount, String transactionDate, String transactionName) {
+    public AccountTransactionsEntity(String transactionId, TransactionCategoryEntity transactionCategory, BankAccountEntity bankAccount, BudgetsEntity budgetEnty, String transactionAmount, String transactionDate, String transactionName) {
        this.transactionId = transactionId;
-       this.bankAccountEntity = bankAccountEntity;
-       this.transactionCategory = transactionCategoryEntity;
+       this.transactionCategory = transactionCategory;
+       this.bankAccount = bankAccount;
+       this.budgetEnty = budgetEnty;
        this.transactionAmount = transactionAmount;
        this.transactionDate = transactionDate;
        this.transactionName = transactionName;
@@ -56,23 +58,33 @@ public class AccountTransactionsEntity implements java.io.Serializable {
     }
 
 @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="account")
-    public BankAccountEntity getBankAccountEntity() {
-        return this.bankAccountEntity;
-    }
-    
-    public void setBankAccountEntity(BankAccountEntity bankAccountEntity) {
-        this.bankAccountEntity = bankAccountEntity;
-    }
-
-@ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="transaction_type")
     public TransactionCategoryEntity getTransactionCategory() {
         return this.transactionCategory;
     }
     
-    public void setTransactionCategory(TransactionCategoryEntity transactionCategoryEntity) {
-        this.transactionCategory = transactionCategoryEntity;
+    public void setTransactionCategory(TransactionCategoryEntity transactionCategory) {
+        this.transactionCategory = transactionCategory;
+    }
+
+@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="account")
+    public BankAccountEntity getBankAccount() {
+        return this.bankAccount;
+    }
+    
+    public void setBankAccount(BankAccountEntity bankAccount) {
+        this.bankAccount = bankAccount;
+    }
+
+@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="budget")
+    public BudgetsEntity getBudgetEnty() {
+        return this.budgetEnty;
+    }
+    
+    public void setBudgetEnty(BudgetsEntity budgets) {
+        this.budgetEnty = budgets;
     }
 
     

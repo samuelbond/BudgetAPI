@@ -19,6 +19,8 @@
         <mapping class="uk.co.platitech.UsersEntity"/>
         <mapping class="uk.co.platitech.CurrenciesEntity"/>
         <mapping class="uk.co.platitech.BankAccountEntity"/>
+        <mapping class="uk.co.platitech.BudgetsEntity"/>
+
 
 
         <!-- DB schema will be updated if needed -->

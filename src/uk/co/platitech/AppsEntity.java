@@ -1,5 +1,5 @@
 package uk.co.platitech;
-// Generated Nov 9, 2014 2:37:52 PM by Hibernate Tools 4.3.1
+// Generated 26-Nov-2014 12:12:14 by Hibernate Tools 3.6.0
 
 
 import javax.persistence.Column;

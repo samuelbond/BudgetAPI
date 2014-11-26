@@ -17,7 +17,7 @@ public class AccountTransactionAdaptor implements JsonSerializer<AccountTransact
     public JsonElement serialize(AccountTransactionsEntity transactionsEntity, Type type, JsonSerializationContext jsc) {
         JsonObject jsonObject = new JsonObject();
 
-        jsonObject.addProperty("account_id", transactionsEntity.getBankAccountEntity().getId());
+        jsonObject.addProperty("account_id", transactionsEntity.getBankAccount().getId());
         jsonObject.addProperty("transaction_name", transactionsEntity.getTransactionName());
         jsonObject.addProperty("transaction_amount", transactionsEntity.getTransactionAmount());
         jsonObject.addProperty("transaction_id", transactionsEntity.getTransactionId());

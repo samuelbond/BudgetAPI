@@ -1,5 +1,5 @@
 package uk.co.platitech;
-// Generated Nov 9, 2014 2:37:52 PM by Hibernate Tools 4.3.1
+// Generated 26-Nov-2014 12:12:14 by Hibernate Tools 3.6.0
 
 
 import java.util.HashSet;
@@ -27,7 +27,8 @@ public class UsersEntity implements java.io.Serializable {
      private String email;
      private String fullname;
      private String password;
-     private Set<BankAccountEntity> bankAccountEntities = new HashSet<BankAccountEntity>(0);
+     private Set<BudgetsEntity> budgetses = new HashSet<BudgetsEntity>(0);
+     private Set<BankAccountEntity> bankAccounts = new HashSet<BankAccountEntity>(0);
 
     public UsersEntity() {
     }
@@ -36,12 +37,13 @@ public class UsersEntity implements java.io.Serializable {
     public UsersEntity(String userId) {
         this.userId = userId;
     }
-    public UsersEntity(String userId, String email, String fullname, String password, Set<BankAccountEntity> bankAccountEntities) {
+    public UsersEntity(String userId, String email, String fullname, String password, Set<BudgetsEntity> budgetses, Set<BankAccountEntity> bankAccounts) {
        this.userId = userId;
        this.email = email;
        this.fullname = fullname;
        this.password = password;
-       this.bankAccountEntities = bankAccountEntities;
+       this.budgetses = budgetses;
+       this.bankAccounts = bankAccounts;
     }
    
      @Id 
@@ -87,12 +89,21 @@ public class UsersEntity implements java.io.Serializable {
     }
 
 @OneToMany(fetch=FetchType.LAZY, mappedBy="users")
-    public Set<BankAccountEntity> getBankAccountEntities() {
-        return this.bankAccountEntities;
+    public Set<BudgetsEntity> getBudgetses() {
+        return this.budgetses;
     }
     
-    public void setBankAccountEntities(Set<BankAccountEntity> bankAccountEntities) {
-        this.bankAccountEntities = bankAccountEntities;
+    public void setBudgetses(Set<BudgetsEntity> budgetses) {
+        this.budgetses = budgetses;
+    }
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="users")
+    public Set<BankAccountEntity> getBankAccounts() {
+        return this.bankAccounts;
+    }
+    
+    public void setBankAccounts(Set<BankAccountEntity> bankAccounts) {
+        this.bankAccounts = bankAccounts;
     }
 
 

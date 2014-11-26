@@ -1,5 +1,5 @@
 package uk.co.platitech;
-// Generated Nov 9, 2014 2:37:52 PM by Hibernate Tools 4.3.1
+// Generated 26-Nov-2014 12:12:14 by Hibernate Tools 3.6.0
 
 
 import java.util.HashSet;
@@ -25,14 +25,14 @@ public class TransactionCategoryEntity implements java.io.Serializable {
 
      private Integer id;
      private String categoryName;
-     private Set<AccountTransactionsEntity> accountTransactionseEntities = new HashSet<AccountTransactionsEntity>(0);
+     private Set<AccountTransactionsEntity> accountTransactionses = new HashSet<AccountTransactionsEntity>(0);
 
     public TransactionCategoryEntity() {
     }
 
-    public TransactionCategoryEntity(String categoryName, Set<AccountTransactionsEntity> accountTransactionseEntities) {
+    public TransactionCategoryEntity(String categoryName, Set<AccountTransactionsEntity> accountTransactionses) {
        this.categoryName = categoryName;
-       this.accountTransactionseEntities = accountTransactionseEntities;
+       this.accountTransactionses = accountTransactionses;
     }
    
      @Id @GeneratedValue(strategy=IDENTITY)
@@ -58,12 +58,12 @@ public class TransactionCategoryEntity implements java.io.Serializable {
     }
 
 @OneToMany(fetch=FetchType.LAZY, mappedBy="transactionCategory")
-    public Set<AccountTransactionsEntity> getAccountTransactionseEntities() {
-        return this.accountTransactionseEntities;
+    public Set<AccountTransactionsEntity> getAccountTransactionses() {
+        return this.accountTransactionses;
     }
     
-    public void setAccountTransactionseEntities(Set<AccountTransactionsEntity> accountTransactionseEntities) {
-        this.accountTransactionseEntities = accountTransactionseEntities;
+    public void setAccountTransactionses(Set<AccountTransactionsEntity> accountTransactionses) {
+        this.accountTransactionses = accountTransactionses;
     }
 
 

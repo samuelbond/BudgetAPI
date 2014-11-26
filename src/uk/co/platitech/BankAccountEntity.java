@@ -1,5 +1,5 @@
 package uk.co.platitech;
-// Generated Nov 9, 2014 2:37:52 PM by Hibernate Tools 4.3.1
+// Generated 26-Nov-2014 12:12:14 by Hibernate Tools 3.6.0
 
 
 import java.util.HashSet;
@@ -13,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -26,99 +25,114 @@ import javax.persistence.Table;
 public class BankAccountEntity implements java.io.Serializable {
 
 
-    private Integer id;
-    private CurrenciesEntity currencies;
-    private UsersEntity users;
-    private String accountName;
-    private Long accountNumber;
-    private Set<AccountTransactionsEntity> accountTransactionses = new HashSet<AccountTransactionsEntity>(0);
-    private Set<AccountBalanceEntity> accountBalances = new HashSet<AccountBalanceEntity>(0);
+     private Integer id;
+     private CurrenciesEntity currencies;
+     private UsersEntity users;
+     private String accountName;
+     private Long accountNumber;
+     private Set<AccountTransactionsEntity> accountTransactionses = new HashSet<AccountTransactionsEntity>(0);
+     private Set<BudgetsEntity> budgetses = new HashSet<BudgetsEntity>(0);
+     private Set<AccountBalanceEntity> accountBalances = new HashSet<AccountBalanceEntity>(0);
 
     public BankAccountEntity() {
     }
 
-
+	
     public BankAccountEntity(CurrenciesEntity currencies) {
         this.currencies = currencies;
     }
-    public BankAccountEntity(CurrenciesEntity currencies, UsersEntity users, String accountName, Long accountNumber, Set<AccountTransactionsEntity> accountTransactionses, Set<AccountBalanceEntity> accountBalances) {
-        this.currencies = currencies;
-        this.users = users;
-        this.accountName = accountName;
-        this.accountNumber = accountNumber;
-        this.accountTransactionses = accountTransactionses;
-        this.accountBalances = accountBalances;
+    public BankAccountEntity(CurrenciesEntity currencies, UsersEntity users, String accountName, Long accountNumber, Set<AccountTransactionsEntity> accountTransactionses, Set<BudgetsEntity> budgetses, Set<AccountBalanceEntity> accountBalances) {
+       this.currencies = currencies;
+       this.users = users;
+       this.accountName = accountName;
+       this.accountNumber = accountNumber;
+       this.accountTransactionses = accountTransactionses;
+       this.budgetses = budgetses;
+       this.accountBalances = accountBalances;
     }
+   
+     @Id @GeneratedValue(strategy=IDENTITY)
 
-    @Id @GeneratedValue(strategy=IDENTITY)
-
-
+    
     @Column(name="id", unique=true, nullable=false)
     public Integer getId() {
         return this.id;
     }
-
+    
     public void setId(Integer id) {
         this.id = id;
     }
 
-    @ManyToOne(fetch=FetchType.LAZY)
+@ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="currency", nullable=false)
     public CurrenciesEntity getCurrencies() {
         return this.currencies;
     }
-
+    
     public void setCurrencies(CurrenciesEntity currencies) {
         this.currencies = currencies;
     }
 
-    @ManyToOne(fetch=FetchType.LAZY)
+@ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id")
     public UsersEntity getUsers() {
         return this.users;
     }
-
+    
     public void setUsers(UsersEntity users) {
         this.users = users;
     }
 
-
+    
     @Column(name="account_name")
     public String getAccountName() {
         return this.accountName;
     }
-
+    
     public void setAccountName(String accountName) {
         this.accountName = accountName;
     }
 
-
+    
     @Column(name="account_number")
     public Long getAccountNumber() {
         return this.accountNumber;
     }
-
+    
     public void setAccountNumber(Long accountNumber) {
         this.accountNumber = accountNumber;
     }
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="bankAccountEntity")
+@OneToMany(fetch=FetchType.LAZY, mappedBy="bankAccount")
     public Set<AccountTransactionsEntity> getAccountTransactionses() {
         return this.accountTransactionses;
     }
-
+    
     public void setAccountTransactionses(Set<AccountTransactionsEntity> accountTransactionses) {
         this.accountTransactionses = accountTransactionses;
     }
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="bankAccount")
+@OneToMany(fetch=FetchType.LAZY, mappedBy="bankAccount")
+    public Set<BudgetsEntity> getBudgetses() {
+        return this.budgetses;
+    }
+    
+    public void setBudgetses(Set<BudgetsEntity> budgetses) {
+        this.budgetses = budgetses;
+    }
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="bankAccount")
     public Set<AccountBalanceEntity> getAccountBalances() {
         return this.accountBalances;
     }
-
+    
     public void setAccountBalances(Set<AccountBalanceEntity> accountBalances) {
         this.accountBalances = accountBalances;
     }
+
+
+
+
 }
 
 
