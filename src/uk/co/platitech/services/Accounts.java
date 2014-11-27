@@ -2,23 +2,18 @@ package uk.co.platitech.services;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import sun.misc.FloatingDecimal;
 import uk.co.platitech.*;
 import uk.co.platitech.components.accountmanager.v1.AccountManagerImp;
 import uk.co.platitech.components.appauthentication.v1.AppAuthenticationImp;
 import uk.co.platitech.helpers.AccountTransactionAdaptor;
 import uk.co.platitech.helpers.BankAccountAdaptor;
-import uk.co.platitech.helpers.DataObject;
-import uk.co.platitech.helpers.HibernateProxyTypeAdapter;
+
 
 import javax.ejb.Stateless;
 import javax.ws.rs.*;
-import java.util.Date;
 import java.util.List;
 
-import static uk.co.platitech.helpers.HibernateProxyTypeAdapter.FACTORY;
 
 /**
  * Created by samuel on 10/11/14.
