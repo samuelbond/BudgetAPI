@@ -93,6 +93,16 @@ public class AccountManagerImp implements AccountManagerInterface {
         return this.data.fetchAllAccountTransactions(bae);
     }
 
+    public List<AccountTransactionsEntity> getAccountTransactions(Integer accountId, Integer budget)
+    {
+        BankAccountEntity bae = new BankAccountEntity();
+        bae.setId(accountId);
+        BudgetsEntity be = new BudgetsEntity();
+        be.setBudgetId(budget);
+
+        return this.data.fetchAllAccountTransactions(bae, be);
+    }
+
     public Boolean removeAccount(String accountId)
     {
         try

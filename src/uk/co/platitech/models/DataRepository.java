@@ -169,6 +169,18 @@ public class DataRepository {
         return null;
     }
 
+    public List<AccountTransactionsEntity> fetchAllAccountTransactions(BankAccountEntity accountEntity, BudgetsEntity budgetsEntity) {
+        try {
+            Query query = session.createQuery("from AccountTransactionsEntity ac where ac.bankAccount = :acAcc and ac.budgetEnty = :acBud ");
+            query.setParameter("acAcc", accountEntity);
+            query.setParameter("acBud", budgetsEntity);
+
+            return (List<AccountTransactionsEntity>) query.list();
+        } catch (Exception ex) {
+        }
+        return null;
+    }
+
     public List<AccountTransactionsEntity> fetchAllBudgetTransactions(BudgetsEntity budgetsEntity) {
         try {
             Query query = session.createQuery("from AccountTransactionsEntity ac where ac.budgetEnty = :acAcc  ");

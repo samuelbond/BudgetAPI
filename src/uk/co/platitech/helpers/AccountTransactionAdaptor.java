@@ -22,7 +22,8 @@ public class AccountTransactionAdaptor implements JsonSerializer<AccountTransact
         jsonObject.addProperty("transaction_amount", transactionsEntity.getTransactionAmount());
         jsonObject.addProperty("transaction_id", transactionsEntity.getTransactionId());
         jsonObject.addProperty("transaction_date", transactionsEntity.getTransactionDate());
-        jsonObject.addProperty("transaction_type", transactionsEntity.getTransactionCategory().getCategoryName());
+        jsonObject.addProperty("transaction_category", transactionsEntity.getTransactionCategory().getCategoryName());
+        jsonObject.addProperty("transaction_type", ((transactionsEntity.getBudgetEnty() == null) ? "account" : transactionsEntity.getBudgetEnty().getBudgetName()));
         return jsonObject;
     }
 }
