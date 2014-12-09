@@ -8,6 +8,7 @@ import uk.co.platitech.components.accountmanager.v1.AccountManagerImp;
 import uk.co.platitech.components.appauthentication.v1.AppAuthenticationImp;
 import uk.co.platitech.helpers.AccountTransactionAdaptor;
 import uk.co.platitech.helpers.BankAccountAdaptor;
+import uk.co.platitech.helpers.BudgetAdaptor;
 
 
 import javax.ejb.Stateless;
@@ -162,6 +163,63 @@ public class Accounts {
 
         return output;
     }
+
+
+
+    @POST
+    @Path("/budgets")
+    @Produces({"application/json"})
+    public String getAllBudgets(javax.json.JsonObject json)
+    {
+        List<String> requiredParameters = new ArrayList<>();
+        requiredParameters.add("user_id");
+
+        validation valid = new validation(json, requiredParameters);
+
+
+        JsonObject value = new JsonObject();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.registerTypeAdapter(BudgetsEntity.class, new BudgetAdaptor()).create();
+        String output = null;
+        String userId = json.getString("user_id");
+        AccountManagerImp acct = new AccountManagerImp();
+
+
+        if(!valid.doValidation())
+        {
+            value.addProperty("status", "error");
+            value.addProperty("error", "Invalid list of parameters, "+valid.getFailedParameters());
+            output = value.toString();
+        }
+        else if(userId.length() != 8 )
+        {
+            value.addProperty("status", "error");
+            value.addProperty("error", "Could not validate user");
+            output = value.toString();
+        }
+        else
+        {
+            List<BudgetsEntity> budgets = acct.getBudgets(userId);
+
+
+            if(budgets == null || budgets.isEmpty()) {
+                value.addProperty("status", "success");
+                value.addProperty("message","no budget found for this user");
+
+                output = value.toString();
+            }
+            else
+            {
+                value.addProperty("status", "success");
+                value.add("list", gson.toJsonTree(budgets));
+                output = value.toString();
+            }
+
+        }
+
+        return output;
+    }
+
 
     @POST
     @Path("/create")

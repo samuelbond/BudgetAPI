@@ -103,6 +103,13 @@ public class AccountManagerImp implements AccountManagerInterface {
         return this.data.fetchAllAccountTransactions(bae, be);
     }
 
+    public List<BudgetsEntity> getBudgets(String userId)
+    {
+        UsersEntity ue = new UsersEntity(userId);
+
+        return this.data.fetchAllBudget(ue);
+    }
+
     public Boolean removeAccount(String accountId)
     {
         try
