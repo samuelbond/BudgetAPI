@@ -103,6 +103,14 @@ public class AccountManagerImp implements AccountManagerInterface {
         return this.data.fetchAllAccountTransactions(bae, be);
     }
 
+    public List<AccountTransactionsEntity> getAccountBudgetTransactions(Integer budget)
+    {
+        BudgetsEntity be = new BudgetsEntity();
+        be.setBudgetId(budget);
+
+        return this.data.fetchAllBudgetTransactions(be);
+    }
+
     public List<BudgetsEntity> getBudgets(String userId)
     {
         UsersEntity ue = new UsersEntity(userId);
@@ -181,5 +189,11 @@ public class AccountManagerImp implements AccountManagerInterface {
         }
 
         return false;
+    }
+
+
+    public static void resolveConnection()
+    {
+        DataRepository.connectionClose();
     }
 }

@@ -17,6 +17,7 @@ public class BudgetAdaptor implements JsonSerializer<BudgetsEntity> {
         JsonObject jsonObject = new JsonObject();
 
         jsonObject.addProperty("account_id", budgetsEntity.getBankAccount().getId());
+        jsonObject.addProperty("account_name", budgetsEntity.getBankAccount().getAccountName());
         jsonObject.addProperty("budget_name", budgetsEntity.getBudgetName());
         jsonObject.addProperty("budget_description", budgetsEntity.getBudgetDescription());
         jsonObject.addProperty("budget_id", budgetsEntity.getBudgetId());

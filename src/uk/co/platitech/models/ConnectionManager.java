@@ -49,4 +49,9 @@ public class ConnectionManager {
         throw new UnsupportedOperationException("Entity Manager is not supported");
     }
 
+    public static void closeHibernateConnection()
+    {
+        ourSessionFactory.close();
+    }
+
 }

@@ -167,6 +167,70 @@ public class Accounts {
 
 
     @POST
+    @Path("/transaction/budget")
+    @Produces({"application/json"})
+    public String getSumOfBudgetTransaction(javax.json.JsonObject json)
+    {
+        List<String> requiredParameters = new ArrayList<>();
+        requiredParameters.add("user_id");
+        requiredParameters.add("budget_id");
+
+        validation valid = new validation(json, requiredParameters);
+
+
+        JsonObject value = new JsonObject();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.registerTypeAdapter(AccountTransactionsEntity.class, new AccountTransactionAdaptor()).create();
+        String output = null;
+        String userId = json.getString("user_id");
+        AccountManagerImp acct = new AccountManagerImp();
+
+
+        if(!valid.doValidation())
+        {
+            value.addProperty("status", "error");
+            value.addProperty("error", "Invalid list of parameters, "+valid.getFailedParameters());
+            output = value.toString();
+        }
+        else if(userId.length() != 8 )
+        {
+            value.addProperty("status", "error");
+            value.addProperty("error", "Could not validate user");
+            output = value.toString();
+        }
+        else
+        {
+            List<AccountTransactionsEntity> transactions = acct.getAccountBudgetTransactions(json.getInt("budget_id"));
+
+
+            if(transactions == null || transactions.isEmpty()) {
+                value.addProperty("status", "success");
+                value.addProperty("sum", 0);
+                output = value.toString();
+            }
+            else
+            {
+
+                value.addProperty("status", "success");
+                int sum = 0;
+                for(AccountTransactionsEntity transactionsEntity: transactions)
+                {
+                    sum = sum + (Integer.parseInt(transactionsEntity.getTransactionAmount()));
+                }
+
+                value.addProperty("sum",sum);
+
+                output = value.toString();
+            }
+
+        }
+
+        return output;
+    }
+
+
+
+    @POST
     @Path("/budgets")
     @Produces({"application/json"})
     public String getAllBudgets(javax.json.JsonObject json)
@@ -445,6 +509,7 @@ public class Accounts {
 
             }
         }
+
 
         return output;
     }

@@ -213,4 +213,10 @@ public class DataRepository {
         }
         return null;
     }
+
+
+    public static void connectionClose()
+    {
+        ConnectionManager.closeHibernateConnection();
+    }
 }
