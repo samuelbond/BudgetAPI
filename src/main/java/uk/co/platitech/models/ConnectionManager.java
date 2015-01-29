@@ -3,9 +3,9 @@ package uk.co.platitech.models;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.ServiceRegistryBuilder;
 
 import javax.persistence.EntityManager;
 
@@ -15,21 +15,25 @@ import javax.persistence.EntityManager;
 public class ConnectionManager {
 
 
-    private static final SessionFactory ourSessionFactory;
-    private static final ServiceRegistry serviceRegistry;
+    private static SessionFactory sessionFactory;
 
 
-    static {
-        try {
-            Configuration configuration = new Configuration();
-            configuration.configure();
+    public static SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            // loads configuration and mappings
+            Configuration configuration = new Configuration().configure(ConnectionManager.class.getResource("/hibernate.cfg.xml"));
+            ServiceRegistry serviceRegistry
+                    = new StandardServiceRegistryBuilder()
+                    .applySettings(configuration.getProperties()).build();
 
-            serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
-            ourSessionFactory = configuration.buildSessionFactory(serviceRegistry);
-        } catch (Throwable ex) {
-            throw new ExceptionInInitializerError(ex);
+            // builds a session factory from the service registry
+            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
         }
+
+        return sessionFactory;
     }
+
+
 
     /**
      * Gets the hibernate session
@@ -37,7 +41,7 @@ public class ConnectionManager {
      * @throws HibernateException
      */
     public static Session getHibernateSession() throws HibernateException {
-        return ourSessionFactory.openSession();
+        return getSessionFactory().openSession();
     }
 
     /**
@@ -51,7 +55,7 @@ public class ConnectionManager {
 
     public static void closeHibernateConnection()
     {
-        ourSessionFactory.close();
+        sessionFactory.close();
     }
 
 }
